@@ -1,0 +1,33 @@
+.node {
+    position: relative;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    margin: 0 20px;
+    height: 100%;
+}
+
+.node:hover {
+    background: ghostwhite;
+}
+
+.node:global(.willReceiveDrop) {
+    background: #e4e4e4;
+}
+
+.node:global(.isSelected) {
+    background: rgb(20, 127, 250, 0.5);
+    border-radius: 0;
+}
+
+.node:global(.isSelectedStart) {
+    border-radius: 8px 8px 0 0;
+}
+
+.node:global(.isSelectedEnd) {
+    border-radius: 0 0 8px 8px;
+}
+
+.node:global(.isSelectedStart.isSelectedEnd) {
+    border-radius: 8px;
+}

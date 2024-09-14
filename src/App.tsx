@@ -1,10 +1,13 @@
 import { NodeRendererProps, Tree } from 'react-arborist';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronRight, GripVertical } from 'lucide-react';
+
+import styles from './node.module.css';
 
 import { FillFlexParent } from '@/components/fill-flex-parent';
 import { Combobox } from '@/components/ui/combobox';
 
 import './index.css';
+import { cn } from './lib/utils';
 
 type Data = { id: string; name: string; children?: Data[] };
 
@@ -53,17 +56,25 @@ const options = [
 
 const Node = ({ node, style, dragHandle }: NodeRendererProps<Data>) => {
     return (
-        <div style={style} className='flex items-center gap-2' ref={dragHandle}>
-            {!node.isLeaf && (
-                <button
-                    onClick={() => {
-                        if (node.isInternal) {
-                            node.toggle();
-                        }
-                    }}>
-                    {node.isOpen ? <ChevronDown /> : <ChevronRight />}
-                </button>
-            )}
+        <div
+            style={style}
+            className={cn('flex items-center gap-2', styles.node, node.state)}
+            ref={dragHandle}>
+            <div className='w-6'>
+                {!node.isLeaf && (
+                    <button
+                        onClick={() => {
+                            if (node.isInternal) {
+                                node.toggle();
+                            }
+                        }}>
+                        <div
+                            className={`transition-transform duration-200 ease-in-out ${node.isOpen ? 'rotate-90' : 'rotate-0'}`}>
+                            <ChevronRight />
+                        </div>
+                    </button>
+                )}
+            </div>
             <Combobox
                 defaultValue={node.data.name}
                 options={options}
@@ -76,6 +87,7 @@ const Node = ({ node, style, dragHandle }: NodeRendererProps<Data>) => {
                     });
                 }}
             />
+            <GripVertical className='ml-4 cursor-pointer' />
         </div>
     );
 };
