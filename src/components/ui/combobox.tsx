@@ -1,6 +1,6 @@
 'use client';
 
-import * as React from 'react';
+import { useState } from 'react';
 import { Check, ChevronsUpDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -19,32 +19,21 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover';
 
-const frameworks = [
-    {
-        value: 'next.js',
-        label: 'Next.js',
-    },
-    {
-        value: 'sveltekit',
-        label: 'SvelteKit',
-    },
-    {
-        value: 'nuxt.js',
-        label: 'Nuxt.js',
-    },
-    {
-        value: 'remix',
-        label: 'Remix',
-    },
-    {
-        value: 'astro',
-        label: 'Astro',
-    },
-];
-
-export function Combobox() {
-    const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState('');
+export function Combobox({
+    defaultValue,
+    options,
+    disabled,
+    callback,
+    onClick,
+}: {
+    options: { value: string; label: string }[];
+    onClick?: () => void;
+    disabled?: boolean;
+    defaultValue?: string;
+    callback?: (value: string) => void;
+}) {
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(defaultValue);
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
@@ -52,12 +41,13 @@ export function Combobox() {
                 <Button
                     variant='outline'
                     role='combobox'
+                    disabled={disabled}
                     aria-expanded={open}
-                    className='w-[200px] justify-between'>
+                    className='w-[200px] justify-between'
+                    onClick={onClick}>
                     {value
-                        ? frameworks.find(
-                              (framework) => framework.value === value,
-                          )?.label
+                        ? options.find((item) => item.value === value)?.label ||
+                          value
                         : 'Select'}
                     <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                 </Button>
@@ -68,10 +58,10 @@ export function Combobox() {
                     <CommandList>
                         <CommandEmpty>Nothing found.</CommandEmpty>
                         <CommandGroup>
-                            {frameworks.map((framework) => (
+                            {options.map((item) => (
                                 <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
+                                    key={item.value}
+                                    value={item.value}
                                     onSelect={(currentValue) => {
                                         setValue(
                                             currentValue === value
@@ -79,16 +69,17 @@ export function Combobox() {
                                                 : currentValue,
                                         );
                                         setOpen(false);
+                                        if (callback) callback(currentValue);
                                     }}>
                                     <Check
                                         className={cn(
                                             'mr-2 h-4 w-4',
-                                            value === framework.value
+                                            value === item.value
                                                 ? 'opacity-100'
                                                 : 'opacity-0',
                                         )}
                                     />
-                                    {framework.label}
+                                    {item.label}
                                 </CommandItem>
                             ))}
                         </CommandGroup>

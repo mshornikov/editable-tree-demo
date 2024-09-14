@@ -14,7 +14,7 @@ To enable corepack:
 corepack enable
 ```
 
-As package manager we use [pnpm](https://pnpm.io).
+As package manager [pnpm](https://pnpm.io) is used.
 
 To install dependencies:
 

@@ -14,7 +14,7 @@ export const FillFlexParent = React.forwardRef(function FillFlexParent(
 
     return (
         <div
-            className='w-full h-full min-h-0 min-w-0'
+            className='h-full min-h-0 w-full min-w-0'
             ref={mergeRefs(ref, forwardRef)}>
             {width && height ? props.children({ width, height }) : null}
         </div>

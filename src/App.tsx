@@ -1,18 +1,23 @@
 import { NodeRendererProps, Tree } from 'react-arborist';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+
+import { FillFlexParent } from '@/components/fill-flex-parent';
+import { Combobox } from '@/components/ui/combobox';
 
 import './index.css';
-import { FillFlexParent } from './components/fill-flex-parent';
-import { ChevronDown, ChevronRight } from 'lucide-react';
 
 type Data = { id: string; name: string; children?: Data[] };
 
 const data = Array.from({ length: 2000 }).map((_, index) => {
-    const object: Data = { id: index.toString(), name: index.toString() };
+    const object: Data = {
+        id: Math.random().toString(),
+        name: index.toString(),
+    };
 
     if (index < 10) {
         object.children = Array.from({ length: 100 }).map((_, i) => {
             const child: Data = {
-                id: `${index.toString()}${i.toString()}`,
+                id: Math.random().toString(),
                 name: `${index.toString()}${i.toString()}`,
             };
 
@@ -23,7 +28,28 @@ const data = Array.from({ length: 2000 }).map((_, index) => {
     return object;
 });
 
-const options = ['string', 'boolean', 'number', 'object', 'array'];
+const options = [
+    {
+        value: 'string',
+        label: 'string',
+    },
+    {
+        value: 'number',
+        label: 'number',
+    },
+    {
+        value: 'array',
+        label: 'array',
+    },
+    {
+        value: 'boolean',
+        label: 'boolean',
+    },
+    {
+        value: 'object',
+        label: 'object',
+    },
+];
 
 const Node = ({ node, style, dragHandle }: NodeRendererProps<Data>) => {
     return (
@@ -38,28 +64,32 @@ const Node = ({ node, style, dragHandle }: NodeRendererProps<Data>) => {
                     {node.isOpen ? <ChevronDown /> : <ChevronRight />}
                 </button>
             )}
-            <select>
-                <option value={node.data.name}>{node.data.name}</option>
-                {options.map((i) => (
-                    <option value={i} key={i}>
-                        {i}
-                    </option>
-                ))}
-            </select>
+            <Combobox
+                defaultValue={node.data.name}
+                options={options}
+                callback={(value) => {
+                    node.submit(value);
+                }}
+                onClick={() => {
+                    node.edit().catch(() => {
+                        throw new Error();
+                    });
+                }}
+            />
         </div>
     );
 };
 
 const App = () => {
     return (
-        <div className='h-screen pl-5 py-5'>
+        <div className='h-screen py-5 pl-5'>
             <FillFlexParent>
                 {(dimensions) => (
                     <Tree
                         {...dimensions}
                         initialData={data}
                         openByDefault={false}
-                        rowHeight={30}
+                        rowHeight={50}
                         indent={32}>
                         {Node}
                     </Tree>
