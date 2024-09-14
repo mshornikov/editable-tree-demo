@@ -4,6 +4,7 @@
         "esbenp.prettier-vscode",
         "editorconfig.editorconfig",
         "streetsidesoftware.code-spell-checker",
-        "streetsidesoftware.code-spell-checker-russian"
+        "streetsidesoftware.code-spell-checker-russian",
+        "bradlc.vscode-tailwindcss"
     ]
 }
