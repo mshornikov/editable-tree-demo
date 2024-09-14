@@ -11,26 +11,6 @@ import { cn } from './lib/utils';
 
 type Data = { id: string; name: string; children?: Data[] };
 
-const data = Array.from({ length: 2000 }).map((_, index) => {
-    const object: Data = {
-        id: Math.random().toString(),
-        name: index.toString(),
-    };
-
-    if (index < 10) {
-        object.children = Array.from({ length: 100 }).map((_, i) => {
-            const child: Data = {
-                id: Math.random().toString(),
-                name: `${index.toString()}${i.toString()}`,
-            };
-
-            return child;
-        });
-    }
-
-    return object;
-});
-
 const options = [
     {
         value: 'string',
@@ -54,27 +34,47 @@ const options = [
     },
 ];
 
+const data = Array.from({ length: 2000 }).map((_, index) => {
+    const object: Data = {
+        id: Math.random().toString(),
+        name: options[Math.floor(Math.random() * 4)].label,
+    };
+
+    if (index < 10) {
+        object.children = Array.from({ length: 100 }).map(() => {
+            const child: Data = {
+                id: Math.random().toString(),
+                name: options[Math.floor(Math.random() * 4)].label,
+            };
+
+            return child;
+        });
+    }
+
+    return object;
+});
+
 const Node = ({ node, style, dragHandle }: NodeRendererProps<Data>) => {
     return (
         <div
             style={style}
             className={cn('flex items-center gap-2', styles.node, node.state)}
             ref={dragHandle}>
-            <div className='w-6'>
-                {!node.isLeaf && (
-                    <button
-                        onClick={() => {
-                            if (node.isInternal) {
-                                node.toggle();
-                            }
-                        }}>
-                        <div
-                            className={`transition-transform duration-200 ease-in-out ${node.isOpen ? 'rotate-90' : 'rotate-0'}`}>
-                            <ChevronRight />
-                        </div>
-                    </button>
-                )}
-            </div>
+            {!node.isLeaf ? (
+                <button
+                    onClick={() => {
+                        if (node.isInternal) {
+                            node.toggle();
+                        }
+                    }}>
+                    <div
+                        className={`transition-transform duration-200 ease-in-out ${node.isOpen ? 'rotate-90' : 'rotate-0'}`}>
+                        <ChevronRight />
+                    </div>
+                </button>
+            ) : (
+                <div className='w-6'></div>
+            )}
             <Combobox
                 defaultValue={node.data.name}
                 options={options}
