@@ -25,5 +25,5 @@ pnpm i
 To run dev server:
 
 ```sh
-pnpm run dev
+pnpm dev
 ```
